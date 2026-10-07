@@ -17,6 +17,9 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
         super(const HabitState()) {
     on<LoadHabits>(_onLoadHabits);
     on<AddHabit>(_onAddHabit);
+    on<UpdateHabit>(_onUpdateHabit);
+    on<DeleteHabit>(_onDeleteHabit);
+    on<ClearAllHabits>(_onClearAllHabits);
     on<ToggleHabitStatus>(_onToggleHabitStatus);
     on<ToggleHabitStatusByDate>(_onToggleHabitStatusByDate);
   }
@@ -33,6 +36,46 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
       // Keep UI usable; user can retry by restarting the app.
       emit(state.copyWith(isLoading: false));
     }
+  }
+
+  Future<void> _onUpdateHabit(
+    UpdateHabit event,
+    Emitter<HabitState> emit,
+  ) async {
+    final title = event.title.trim();
+    if (title.isEmpty) return;
+
+    Habit? updatedHabit;
+    final updatedHabits = state.habits.map((habit) {
+      if (habit.id == event.id) {
+        updatedHabit = habit.copyWith(title: title);
+        return updatedHabit!;
+      }
+      return habit;
+    }).toList();
+
+    if (updatedHabit == null) return;
+
+    emit(state.copyWith(habits: updatedHabits));
+    await _repository.saveHabit(updatedHabit!);
+  }
+
+  Future<void> _onDeleteHabit(
+    DeleteHabit event,
+    Emitter<HabitState> emit,
+  ) async {
+    final updatedHabits =
+        state.habits.where((h) => h.id != event.id).toList();
+    emit(state.copyWith(habits: updatedHabits));
+    await _repository.deleteHabit(event.id);
+  }
+
+  Future<void> _onClearAllHabits(
+    ClearAllHabits event,
+    Emitter<HabitState> emit,
+  ) async {
+    emit(state.copyWith(habits: []));
+    await _repository.clearAllHabits();
   }
 
   Future<void> _onAddHabit(AddHabit event, Emitter<HabitState> emit) async {

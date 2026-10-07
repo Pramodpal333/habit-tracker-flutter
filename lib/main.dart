@@ -6,10 +6,12 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import 'blocs/habit/habit_bloc.dart';
 import 'blocs/habit/habit_event.dart';
+import 'data/local/app_settings_local_data_source.dart';
 import 'data/local/habit_local_data_source.dart';
+import 'data/repositories/app_settings_repository.dart';
 import 'data/repositories/habit_repository.dart';
 import 'data/repositories/local_habit_repository.dart';
-import 'screens/home_screen.dart';
+import 'screens/main_shell_screen.dart';
 import 'theme/app_theme.dart';
 
 Future<void> main() async {
@@ -20,41 +22,60 @@ Future<void> main() async {
   final localDataSource = HabitLocalDataSource();
   await localDataSource.init();
 
-  // Inject local repo today; replace with Remote/Sync repo when you add a backend.
+  final settingsDataSource = AppSettingsLocalDataSource();
+  await settingsDataSource.init();
+
+  // Inject local repos today; replace with Remote/Sync repos when you add a backend.
   final HabitRepository habitRepository =
       LocalHabitRepository(localDataSource);
+  final AppSettingsRepository settingsRepository =
+      LocalAppSettingsRepository(settingsDataSource);
 
-  runApp(HabitChecklistApp(habitRepository: habitRepository));
+  runApp(
+    HabitChecklistApp(
+      habitRepository: habitRepository,
+      settingsRepository: settingsRepository,
+    ),
+  );
 }
 
 class HabitChecklistApp extends StatelessWidget {
   const HabitChecklistApp({
     super.key,
     required this.habitRepository,
+    required this.settingsRepository,
   });
 
-  /// Single swap point when moving from local-only to API/Firebase.
   final HabitRepository habitRepository;
+  final AppSettingsRepository settingsRepository;
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => HabitBloc(repository: habitRepository)
-        ..add(const LoadHabits()),
-      child: MaterialApp(
-        title: 'Habit Checklist',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-          AppLocalizations.delegate,
-        ],
-        supportedLocales: const [
-          Locale('en', ''),
-        ],
-        home: const HomeScreen(),
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<HabitRepository>.value(value: habitRepository),
+        RepositoryProvider<AppSettingsRepository>.value(
+          value: settingsRepository,
+        ),
+      ],
+      child: BlocProvider(
+        create: (context) => HabitBloc(repository: habitRepository)
+          ..add(const LoadHabits()),
+        child: MaterialApp(
+          title: 'Habit Checklist',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            AppLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en', ''),
+          ],
+          home: const MainShellScreen(),
+        ),
       ),
     );
   }

@@ -34,6 +34,18 @@ class LocalHabitRepository implements HabitRepository {
 
   /// Writes the full list — simple and reliable for a local-first v1.
   /// A sync layer can later diff or upsert per habit when talking to an API.
+  @override
+  Future<void> deleteHabit(String id) async {
+    final habits = await getHabits();
+    habits.removeWhere((h) => h.id == id);
+    await _persistAll(habits);
+  }
+
+  @override
+  Future<void> clearAllHabits() async {
+    await _localDataSource.writeAllHabitMaps([]);
+  }
+
   Future<void> _persistAll(List<Habit> habits) async {
     final maps = habits.map((h) => h.toJson()).toList();
     await _localDataSource.writeAllHabitMaps(maps);

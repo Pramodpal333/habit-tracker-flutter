@@ -14,4 +14,10 @@ abstract class HabitRepository {
 
   /// Inserts a new habit or replaces an existing one with the same [Habit.id].
   Future<void> saveHabit(Habit habit);
+
+  /// Removes a single habit by id (used from the Habits tab menu).
+  Future<void> deleteHabit(String id);
+
+  /// Wipes all habits — used by Settings → Reset app, keeps settings keys separate.
+  Future<void> clearAllHabits();
 }

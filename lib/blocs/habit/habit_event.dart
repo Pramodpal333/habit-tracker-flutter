@@ -13,6 +13,32 @@ class LoadHabits extends HabitEvent {
   const LoadHabits();
 }
 
+/// Renames an existing habit (Habits tab → Edit).
+class UpdateHabit extends HabitEvent {
+  final String id;
+  final String title;
+
+  const UpdateHabit({required this.id, required this.title});
+
+  @override
+  List<Object?> get props => [id, title];
+}
+
+/// Removes one habit from storage and state.
+class DeleteHabit extends HabitEvent {
+  final String id;
+
+  const DeleteHabit(this.id);
+
+  @override
+  List<Object?> get props => [id];
+}
+
+/// Clears every habit — Settings → Reset app (after user confirmation).
+class ClearAllHabits extends HabitEvent {
+  const ClearAllHabits();
+}
+
 /// Event to add a new habit
 class AddHabit extends HabitEvent {
   final String title;
