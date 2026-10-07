@@ -18,12 +18,16 @@ class Habit extends Equatable {
     this.priority = HabitPriority.medium,
   });
 
-  /// Check if the habit is completed today
-  bool get isDoneToday {
-    final now = DateTime.now();
-    return completedDates.any((d) => 
-        d.year == now.year && d.month == now.month && d.day == now.day);
+  /// Whether this habit was marked complete on [date] (calendar day only).
+  bool isCompletedOn(DateTime date) {
+    return completedDates.any(
+      (d) =>
+          d.year == date.year && d.month == date.month && d.day == date.day,
+    );
   }
+
+  /// Check if the habit is completed today
+  bool get isDoneToday => isCompletedOn(DateTime.now());
 
   /// Serializes this habit for local storage or future API payloads.
   Map<String, dynamic> toJson() {

@@ -14,19 +14,21 @@ class HabitCard extends StatelessWidget {
   final Habit habit;
   final VoidCallback onToggle;
   final VoidCallback? onTap;
+  final DateTime? viewDate;
 
   const HabitCard({
     super.key,
     required this.habit,
     required this.onToggle,
     this.onTap,
+    this.viewDate,
   });
 
   @override
   Widget build(BuildContext context) {
     final streakCounter = StreakCounter(completedDates: habit.completedDates);
     final currentStreak = streakCounter.currentStreak;
-    final isDone = habit.isDoneToday;
+    final isDone = habit.isCompletedOn(viewDate ?? DateTime.now());
     final priority = habit.priority;
     final tileGradient = AppGradients.habitTileGradient(priority, habit.id);
     final titleColor =
