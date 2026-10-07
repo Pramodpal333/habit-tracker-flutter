@@ -46,6 +46,11 @@ class LocalHabitRepository implements HabitRepository {
     await _localDataSource.writeAllHabitMaps([]);
   }
 
+  @override
+  Future<void> replaceAllHabits(List<Habit> habits) async {
+    await _persistAll(habits);
+  }
+
   Future<void> _persistAll(List<Habit> habits) async {
     final maps = habits.map((h) => h.toJson()).toList();
     await _localDataSource.writeAllHabitMaps(maps);

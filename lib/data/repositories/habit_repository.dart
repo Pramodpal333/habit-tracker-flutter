@@ -20,4 +20,7 @@ abstract class HabitRepository {
 
   /// Wipes all habits — used by Settings → Reset app, keeps settings keys separate.
   Future<void> clearAllHabits();
+
+  /// Replaces the full habit list — used when restoring a backup file.
+  Future<void> replaceAllHabits(List<Habit> habits);
 }

@@ -6,6 +6,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import 'blocs/habit/habit_bloc.dart';
 import 'blocs/habit/habit_event.dart';
+import 'data/backup/backup_coordinator.dart';
 import 'data/local/app_settings_local_data_source.dart';
 import 'data/local/habit_local_data_source.dart';
 import 'data/repositories/app_settings_repository.dart';
@@ -31,10 +32,16 @@ Future<void> main() async {
   final AppSettingsRepository settingsRepository =
       LocalAppSettingsRepository(settingsDataSource);
 
+  final backupCoordinator = BackupCoordinator(
+    habitRepository: habitRepository,
+    settingsRepository: settingsRepository,
+  );
+
   runApp(
     HabitChecklistApp(
       habitRepository: habitRepository,
       settingsRepository: settingsRepository,
+      backupCoordinator: backupCoordinator,
     ),
   );
 }
@@ -44,10 +51,12 @@ class HabitChecklistApp extends StatelessWidget {
     super.key,
     required this.habitRepository,
     required this.settingsRepository,
+    required this.backupCoordinator,
   });
 
   final HabitRepository habitRepository;
   final AppSettingsRepository settingsRepository;
+  final BackupCoordinator backupCoordinator;
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +65,9 @@ class HabitChecklistApp extends StatelessWidget {
         RepositoryProvider<HabitRepository>.value(value: habitRepository),
         RepositoryProvider<AppSettingsRepository>.value(
           value: settingsRepository,
+        ),
+        RepositoryProvider<BackupCoordinator>.value(
+          value: backupCoordinator,
         ),
       ],
       child: BlocProvider(

@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/habit/habit_bloc.dart';
 import '../blocs/habit/habit_event.dart';
+import '../models/app_backup.dart';
+import '../data/backup/backup_coordinator.dart';
 import '../data/repositories/app_settings_repository.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_typography.dart';
@@ -26,6 +28,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _notificationsEnabled = false;
   bool _settingsLoaded = false;
+  bool _backupBusy = false;
 
   @override
   void didChangeDependencies() {
@@ -51,6 +54,118 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
       );
     }
+  }
+
+  Future<void> _takeBackup() async {
+    if (_backupBusy) return;
+    setState(() => _backupBusy = true);
+
+    try {
+      final saved =
+          await context.read<BackupCoordinator>().exportBackupToDevice();
+      if (!mounted) return;
+      if (saved) {
+        await showAppInfoSheet(
+          context,
+          title: 'Backup saved',
+          message:
+              'Use the share sheet to save the backup (Files, Drive, etc.). '
+              'Keep that .json file somewhere safe.',
+          tone: AppAlertTone.success,
+          icon: Icons.cloud_done_rounded,
+        );
+      }
+    } on BackupException catch (e) {
+      if (!mounted) return;
+      await showAppInfoSheet(
+        context,
+        title: 'Backup failed',
+        message: e.message,
+        tone: AppAlertTone.warning,
+      );
+    } finally {
+      if (mounted) setState(() => _backupBusy = false);
+    }
+  }
+
+  Future<void> _importBackup() async {
+    if (_backupBusy) return;
+
+    final coordinator = context.read<BackupCoordinator>();
+    AppBackup? backup;
+
+    setState(() => _backupBusy = true);
+    try {
+      backup = await coordinator.pickAndParseBackupFile();
+    } on BackupException catch (e) {
+      if (mounted) {
+        await showAppInfoSheet(
+          context,
+          title: 'Invalid backup',
+          message: e.message,
+          tone: AppAlertTone.warning,
+        );
+      }
+      if (mounted) setState(() => _backupBusy = false);
+      return;
+    }
+
+    if (!mounted) return;
+    setState(() => _backupBusy = false);
+
+    if (backup == null) return;
+
+    final currentCount = await coordinator.currentHabitCount();
+    if (!mounted) return;
+
+    final confirmed = await showAppConfirmSheet(
+      context,
+      title: 'Import backup?',
+      message:
+          'This file contains ${backup.habits.length} habit(s), exported on '
+          '${_formatBackupDate(backup.exportedAt)}.\n\n'
+          'Importing will replace your $currentCount habit(s) on this device.',
+      tone: AppAlertTone.warning,
+      confirmLabel: 'Import backup',
+      icon: Icons.file_download_rounded,
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    setState(() => _backupBusy = true);
+    try {
+      await coordinator.applyBackup(backup);
+      if (!mounted) return;
+      context.read<HabitBloc>().add(const LoadHabits());
+      setState(() {
+        _notificationsEnabled =
+            context.read<AppSettingsRepository>().notificationsEnabled;
+      });
+      await showAppInfoSheet(
+        context,
+        title: 'Import complete',
+        message:
+            '${backup.habits.length} habit(s) restored with all completion history.',
+        tone: AppAlertTone.success,
+        actionLabel: 'Done',
+      );
+    } on BackupException catch (e) {
+      if (mounted) {
+        await showAppInfoSheet(
+          context,
+          title: 'Import failed',
+          message: e.message,
+          tone: AppAlertTone.warning,
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _backupBusy = false);
+    }
+  }
+
+  String _formatBackupDate(DateTime date) {
+    return '${date.year}-${date.month.toString().padLeft(2, '0')}-'
+        '${date.day.toString().padLeft(2, '0')}';
   }
 
   Future<void> _confirmResetApp() async {
@@ -173,7 +288,89 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 8),
           SettingsTile(
-            onTap: _confirmResetApp,
+            onTap: _backupBusy ? null : _takeBackup,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.upload_file_rounded,
+                  color: AppColors.primary.withValues(alpha: 0.9),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Take backup',
+                        style: AppTypography.cardTitle.copyWith(fontSize: 16),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        'Save habits & stats as a .json file on your phone',
+                        style: AppTypography.emptyStateText.copyWith(fontSize: 13),
+                      ),
+                    ],
+                  ),
+                ),
+                if (_backupBusy)
+                  const SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                else
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    color: AppColors.textSecondary.withValues(alpha: 0.7),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          SettingsTile(
+            onTap: _backupBusy ? null : _importBackup,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.download_for_offline_rounded,
+                  color: AppColors.primary.withValues(alpha: 0.9),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Insert backup data',
+                        style: AppTypography.cardTitle.copyWith(fontSize: 16),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        'Browse and restore from a backup file you saved',
+                        style: AppTypography.emptyStateText.copyWith(fontSize: 13),
+                      ),
+                    ],
+                  ),
+                ),
+                if (_backupBusy)
+                  const SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                else
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    color: AppColors.textSecondary.withValues(alpha: 0.7),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          SettingsTile(
+            onTap: _backupBusy ? null : _confirmResetApp,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             child: Row(
               children: [

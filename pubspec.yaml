@@ -41,6 +41,12 @@ dependencies:
   # On-device key-value store (Android & iOS). Used only in the local data layer.
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  # Save/open backup .json on device (Android & iOS document pickers).
+  file_picker: ^8.1.6
+  path_provider: ^2.1.5
+  permission_handler: ^11.4.0
+  device_info_plus: ^11.3.3
+  share_plus: ^10.1.4
 
 dev_dependencies:
   flutter_test:

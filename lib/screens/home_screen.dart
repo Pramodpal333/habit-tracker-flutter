@@ -4,16 +4,30 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/habit/habit_bloc.dart';
 import '../blocs/habit/habit_event.dart';
 import '../blocs/habit/habit_state.dart';
+import '../core/storage_permissions.dart';
 import '../widgets/habit_card.dart';
 import '../widgets/habits_empty_state.dart';
 import 'habit_details_screen.dart';
 
 /// **Home** tab — daily checklist with streak toggle (see [HabitCard]).
 ///
-/// Add habit is triggered from [MainShellScreen]'s FAB so this screen stays
-/// focused on "complete today" rather than management actions.
-class HomeScreen extends StatelessWidget {
+/// Requests storage access once here so Settings backup/import works on older
+/// Android devices (see [StoragePermissions]).
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      StoragePermissions.requestOnAppStart();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
