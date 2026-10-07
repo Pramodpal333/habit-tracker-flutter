@@ -9,6 +9,7 @@ import '../theme/app_colors.dart';
 import '../theme/app_typography.dart';
 import 'package:smooth_border/smooth_border.dart';
 
+import '../widgets/app_alert_sheet.dart';
 import '../widgets/settings_tile.dart';
 
 /// **Settings** tab — profile placeholder and app-level actions.
@@ -53,33 +54,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _confirmResetApp() async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Reset app data?'),
-        content: const Text(
+    final confirmed = await showAppConfirmSheet(
+      context,
+      title: 'Reset app data?',
+      message:
           'All habits and completion history will be deleted from this device. '
           'Your notification preference will stay as-is.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Clear data', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
+      tone: AppAlertTone.destructive,
+      confirmLabel: 'Clear data',
+      icon: Icons.layers_clear_rounded,
     );
 
-    if (confirmed == true && mounted) {
-      context.read<HabitBloc>().add(const ClearAllHabits());
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('All habit data cleared')),
-      );
-    }
+    if (confirmed != true || !mounted) return;
+
+    context.read<HabitBloc>().add(const ClearAllHabits());
+    if (!mounted) return;
+    await showAppInfoSheet(
+      context,
+      title: 'Data cleared',
+      message: 'All habits were removed from this device.',
+      tone: AppAlertTone.success,
+      actionLabel: 'Done',
+    );
   }
 
   @override

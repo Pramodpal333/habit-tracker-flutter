@@ -6,6 +6,7 @@ import '../blocs/habit/habit_bloc.dart';
 import '../blocs/habit/habit_event.dart';
 import '../blocs/habit/habit_state.dart';
 import '../theme/app_colors.dart';
+import '../widgets/app_alert_sheet.dart';
 import '../widgets/habit_manage_tile.dart';
 import '../widgets/habits_empty_state.dart';
 import 'edit_habit_screen.dart';
@@ -19,25 +20,15 @@ class HabitsManagementScreen extends StatelessWidget {
   const HabitsManagementScreen({super.key});
 
   Future<void> _confirmDelete(BuildContext context, String habitId) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete habit?'),
-        content: const Text(
+    final confirmed = await showAppConfirmSheet(
+      context,
+      title: 'Delete habit?',
+      message:
           'This removes the habit and all of its completion history. '
           'This cannot be undone.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
+      tone: AppAlertTone.destructive,
+      confirmLabel: 'Delete habit',
+      icon: Icons.delete_outline_rounded,
     );
 
     if (confirmed == true && context.mounted) {
