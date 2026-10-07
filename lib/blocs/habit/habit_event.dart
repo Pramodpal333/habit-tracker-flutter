@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../models/habit_priority.dart';
+
 /// Base event class for Habit-related actions
 abstract class HabitEvent extends Equatable {
   const HabitEvent();
@@ -42,11 +44,12 @@ class ClearAllHabits extends HabitEvent {
 /// Event to add a new habit
 class AddHabit extends HabitEvent {
   final String title;
+  final HabitPriority priority;
 
-  const AddHabit(this.title);
+  const AddHabit(this.title, {this.priority = HabitPriority.medium});
 
   @override
-  List<Object?> get props => [title];
+  List<Object?> get props => [title, priority];
 }
 
 /// Event to toggle the completion status of a habit (for today)

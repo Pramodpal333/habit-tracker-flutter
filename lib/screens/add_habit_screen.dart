@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/habit/habit_bloc.dart';
 import '../blocs/habit/habit_event.dart';
+import '../models/habit_priority.dart';
 import '../theme/app_typography.dart';
 import '../widgets/app_text_field.dart';
+import '../widgets/habit_priority_selector.dart';
 import '../widgets/primary_button.dart';
 
 /// Screen (rendered as a bottom sheet) for adding a new habit
@@ -17,6 +19,7 @@ class AddHabitScreen extends StatefulWidget {
 
 class _AddHabitScreenState extends State<AddHabitScreen> {
   final _titleController = TextEditingController();
+  HabitPriority _priority = HabitPriority.medium;
 
   @override
   void dispose() {
@@ -27,7 +30,7 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
   void _submit() {
     final title = _titleController.text.trim();
     if (title.isNotEmpty) {
-      context.read<HabitBloc>().add(AddHabit(title));
+      context.read<HabitBloc>().add(AddHabit(title, priority: _priority));
       Navigator.of(context).pop(); // Close the modal
     }
   }
@@ -59,6 +62,11 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
             hintText: 'E.g., Read for 30 minutes',
             autofocus: true,
             onSubmitted: (_) => _submit(),
+          ),
+          const SizedBox(height: 20),
+          HabitPrioritySelector(
+            value: _priority,
+            onChanged: (priority) => setState(() => _priority = priority),
           ),
           const SizedBox(height: 24),
           PrimaryButton(text: 'Save Habit', onPressed: _submit),

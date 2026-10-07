@@ -85,6 +85,7 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       title: event.title,
       createdAt: DateTime.now(),
+      priority: event.priority,
     );
 
     final updatedHabits = List<Habit>.from(state.habits)..add(newHabit);
