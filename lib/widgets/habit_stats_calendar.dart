@@ -35,6 +35,8 @@ class _HabitStatsCalendarState extends State<HabitStatsCalendar> {
   }
 
   void _changeMonth(int delta) {
+    if (delta > 0 && !_canGoToNextMonth) return;
+
     setState(() {
       _currentMonth = DateTime(
         _currentMonth.year,
@@ -42,6 +44,14 @@ class _HabitStatsCalendarState extends State<HabitStatsCalendar> {
         1,
       );
     });
+  }
+
+  /// True when the user may open a month after [_currentMonth] (never past today).
+  bool get _canGoToNextMonth {
+    final now = DateTime.now();
+    final viewedYearMonth = _currentMonth.year * 12 + _currentMonth.month;
+    final currentYearMonth = now.year * 12 + now.month;
+    return viewedYearMonth < currentYearMonth;
   }
 
   @override
@@ -86,8 +96,13 @@ class _HabitStatsCalendarState extends State<HabitStatsCalendar> {
           style: AppTypography.screenTitle.copyWith(fontSize: 18),
         ),
         IconButton(
-          onPressed: () => _changeMonth(1),
-          icon: const Icon(Icons.chevron_right, color: AppColors.textPrimary),
+          onPressed: _canGoToNextMonth ? () => _changeMonth(1) : null,
+          icon: Icon(
+            Icons.chevron_right,
+            color: _canGoToNextMonth
+                ? AppColors.textPrimary
+                : AppColors.borderInactive,
+          ),
         ),
       ],
     );
