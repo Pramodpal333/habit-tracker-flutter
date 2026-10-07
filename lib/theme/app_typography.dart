@@ -12,14 +12,14 @@ class AppTypography {
   );
 
   static const TextStyle cardTitle = TextStyle(
-    fontSize: 20,
-    fontWeight: FontWeight.w600,
+    fontSize: 22,
+    fontWeight: FontWeight.w700,
     color: AppColors.textPrimary,
   );
 
   static const TextStyle cardTitleDone = TextStyle(
-    fontSize: 20,
-    fontWeight: FontWeight.w600,
+    fontSize: 22,
+    fontWeight: FontWeight.w700,
     color: AppColors.textSecondary,
     decoration: TextDecoration.lineThrough,
   );

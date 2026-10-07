@@ -12,11 +12,7 @@ import 'app_list_tile.dart';
 ///
 /// Home uses [HabitCard] with the streak/fire control; this tile intentionally
 /// has no toggle so users don't confuse "track today" with "manage habit".
-enum HabitManageAction {
-  seeAnalytics,
-  editHabit,
-  deleteHabit,
-}
+enum HabitManageAction { seeAnalytics, editHabit, deleteHabit }
 
 class HabitManageTile extends StatelessWidget {
   final Habit habit;
@@ -40,27 +36,27 @@ class HabitManageTile extends StatelessWidget {
       leading: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            habit.title.toTitleCase(),
-            style: AppTypography.cardTitle,
-          ),
+          Text(habit.title.toTitleCase(), style: AppTypography.cardTitle),
           const SizedBox(height: 4),
           Text(
             'Current streak: $streak day${streak == 1 ? '' : 's'}',
-            style: AppTypography.emptyStateText.copyWith(fontSize: 13),
+            style: AppTypography.emptyStateText.copyWith(
+              fontSize: 13,
+              color: AppColors.textPrimary,
+            ),
           ),
         ],
       ),
       trailing: PopupMenuButton<HabitManageAction>(
         onSelected: onActionSelected,
-        icon: const Icon(Icons.more_horiz_rounded, color: AppColors.textPrimary),
+        icon: const Icon(
+          Icons.more_horiz_rounded,
+          color: AppColors.textPrimary,
+        ),
         itemBuilder: (context) => [
           PopupMenuItem(
             value: HabitManageAction.seeAnalytics,
-            child: _menuRow(
-              Icons.analytics_outlined,
-              'See analytics',
-            ),
+            child: _menuRow(Icons.analytics_outlined, 'See analytics'),
           ),
           PopupMenuItem(
             value: HabitManageAction.editHabit,
