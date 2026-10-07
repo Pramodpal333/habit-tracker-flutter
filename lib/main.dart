@@ -74,7 +74,7 @@ class HabitChecklistApp extends StatelessWidget {
         create: (context) => HabitBloc(repository: habitRepository)
           ..add(const LoadHabits()),
         child: MaterialApp(
-          title: 'Habit Checklist',
+          title: 'Atomic Habits',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
           localizationsDelegates: const [
