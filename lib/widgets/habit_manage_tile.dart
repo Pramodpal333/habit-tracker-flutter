@@ -49,30 +49,26 @@ class HabitManageTile extends StatelessWidget {
           ),
         ],
       ),
-      trailing: Builder(
-        builder: (buttonContext) {
-          return Material(
-            color: Colors.transparent,
-            shape: SmoothRectangleBorder(borderRadius: 14, smoothing: 0.8),
-            clipBehavior: Clip.antiAlias,
-            child: InkWell(
-              onTap: () => showHabitManageMenu(
-                context,
-                anchorContext: buttonContext,
-              ).then((action) {
-                if (action != null) onActionSelected(action);
-              }),
-              splashColor: AppColors.textPrimary.withValues(alpha: 0.08),
-              child: const Padding(
-                padding: EdgeInsets.all(8),
-                child: Icon(
-                  Icons.more_horiz_rounded,
-                  color: AppColors.textPrimary,
-                ),
-              ),
+      trailing: Material(
+        color: Colors.transparent,
+        shape: SmoothRectangleBorder(borderRadius: 14, smoothing: 0.8),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () => showHabitManageMenu(
+            context,
+            habitTitle: habit.title,
+          ).then((action) {
+            if (action != null) onActionSelected(action);
+          }),
+          splashColor: AppColors.textPrimary.withValues(alpha: 0.08),
+          child: const Padding(
+            padding: EdgeInsets.all(8),
+            child: Icon(
+              Icons.more_horiz_rounded,
+              color: AppColors.textPrimary,
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }
