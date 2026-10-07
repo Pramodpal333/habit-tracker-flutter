@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:smooth_border/smooth_border.dart';
 
 import '../theme/app_colors.dart';
+import '../theme/app_gradients.dart';
 import '../widgets/app_bottom_nav_bar.dart';
+import '../widgets/app_gradient_scaffold.dart';
 import 'add_habit_screen.dart';
 import 'habits_management_screen.dart';
 import 'home_screen.dart';
@@ -46,16 +48,36 @@ class _MainShellScreenState extends State<MainShellScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       extendBody: true,
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _tabs,
+      body: AppGradientScaffold(
+        child: IndexedStack(
+          index: _selectedIndex,
+          children: _tabs,
+        ),
       ),
       floatingActionButton: _selectedIndex == 0
-          ? FloatingActionButton(
-              onPressed: _openAddHabitSheet,
-              shape: SmoothRectangleBorder(borderRadius: 30, smoothing: 1),
-              child: const Icon(Icons.add),
+          ? DecoratedBox(
+              decoration: ShapeDecoration(
+                gradient: AppGradients.fab,
+                shape: SmoothRectangleBorder(borderRadius: 30, smoothing: 1),
+                shadows: [
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: 0.35),
+                    blurRadius: 16,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: FloatingActionButton(
+                onPressed: _openAddHabitSheet,
+                elevation: 0,
+                highlightElevation: 0,
+                backgroundColor: Colors.transparent,
+                foregroundColor: AppColors.textLight,
+                shape: SmoothRectangleBorder(borderRadius: 30, smoothing: 1),
+                child: const Icon(Icons.add_rounded),
+              ),
             )
           : null,
       bottomNavigationBar: AppBottomNavBar(

@@ -6,6 +6,7 @@ import '../blocs/habit/habit_event.dart';
 import '../blocs/habit/habit_state.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_typography.dart';
+import '../widgets/app_gradient_scaffold.dart';
 import '../widgets/habit_stats_calendar.dart';
 
 class HabitDetailsScreen extends StatelessWidget {
@@ -15,7 +16,9 @@ class HabitDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AppGradientScaffold(
+      child: Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         title: BlocBuilder<HabitBloc, HabitState>(
           builder: (context, state) {
@@ -53,6 +56,7 @@ class HabitDetailsScreen extends StatelessWidget {
             ),
           );
         },
+      ),
       ),
     );
   }

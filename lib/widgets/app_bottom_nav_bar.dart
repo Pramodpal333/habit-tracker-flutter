@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smooth_border/smooth_border.dart';
 
 import '../theme/app_colors.dart';
+import '../theme/app_gradients.dart';
 import '../theme/app_typography.dart';
 
 /// Custom bottom bar — matches app squircle cards instead of stock [NavigationBar].
@@ -39,7 +40,7 @@ class AppBottomNavBar extends StatelessWidget {
       minimum: const EdgeInsets.fromLTRB(20, 0, 20, 12),
       child: DecoratedBox(
         decoration: ShapeDecoration(
-          color: AppColors.cardSurface,
+          gradient: AppGradients.bottomNav,
           shadows: [
             BoxShadow(
               color: AppColors.primary.withValues(alpha: 0.08),
@@ -114,9 +115,17 @@ class _NavBarButton extends StatelessWidget {
         curve: Curves.easeOutCubic,
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
         decoration: ShapeDecoration(
-          color: selected
-              ? AppColors.primary.withValues(alpha: 0.12)
-              : Colors.transparent,
+          gradient: selected
+              ? const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0x337C83FD),
+                    Color(0x22969BFF),
+                  ],
+                )
+              : null,
+          color: selected ? null : Colors.transparent,
           shape: SmoothRectangleBorder(
             borderRadius: 20,
             smoothing: 0.8,

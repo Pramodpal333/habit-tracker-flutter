@@ -10,25 +10,44 @@ class AppListTile extends StatelessWidget {
   final Widget? trailing;
   final VoidCallback? onTap;
 
+  /// When set (e.g. from habit priority), the tile uses a soft gradient fill.
+  final Gradient? gradient;
+
+  /// Shadow tint; defaults to primary when no [gradient].
+  final Color? shadowTint;
+
   const AppListTile({
     super.key,
     required this.leading,
     this.trailing,
     this.onTap,
+    this.gradient,
+    this.shadowTint,
   });
 
   @override
   Widget build(BuildContext context) {
+    final tint = shadowTint ?? AppColors.primary;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: ShapeDecoration(
-        color: Theme.of(context).cardTheme.color ?? AppColors.cardSurface,
-        shape: SmoothRectangleBorder(borderRadius: 32, smoothing: 1),
+        gradient: gradient,
+        color: gradient == null
+            ? (Theme.of(context).cardTheme.color ?? AppColors.cardSurface)
+            : null,
+        shape: SmoothRectangleBorder(
+          borderRadius: 32,
+          smoothing: 1,
+          side: gradient != null
+              ? BorderSide(color: tint.withValues(alpha: 0.12))
+              : BorderSide.none,
+        ),
         shadows: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.06),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: tint.withValues(alpha: 0.1),
+            blurRadius: 14,
+            offset: const Offset(0, 6),
           ),
         ],
       ),

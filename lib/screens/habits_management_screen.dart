@@ -58,6 +58,7 @@ class HabitsManagementScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(title: const Text('Habits')),
       body: BlocBuilder<HabitBloc, HabitState>(
         builder: (context, state) {

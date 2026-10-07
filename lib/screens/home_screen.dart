@@ -18,6 +18,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(title: const Text('Dashboard')),
       body: BlocBuilder<HabitBloc, HabitState>(
         builder: (context, state) {

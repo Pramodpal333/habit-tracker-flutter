@@ -4,6 +4,7 @@ import 'package:habit_checklist/core/utils.dart';
 
 import '../models/habit_model.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_gradients.dart';
 import '../theme/app_typography.dart';
 import 'app_list_tile.dart';
 
@@ -33,6 +34,8 @@ class HabitManageTile extends StatelessWidget {
         .currentStreak;
 
     return AppListTile(
+      gradient: AppGradients.habitTileGradient(habit.priority, habit.id),
+      shadowTint: habit.priority.accentColor,
       // No row-level tap — actions live in the ⋮ menu only.
       leading: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

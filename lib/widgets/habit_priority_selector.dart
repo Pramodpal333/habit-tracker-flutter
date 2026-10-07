@@ -76,9 +76,8 @@ class _PriorityRadioChip extends StatelessWidget {
           curve: Curves.easeOutCubic,
           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
           decoration: ShapeDecoration(
-            color: selected
-                ? accent.withValues(alpha: 0.14)
-                : AppColors.background,
+            gradient: selected ? priority.chipGradient : null,
+            color: selected ? null : AppColors.background,
             shape: SmoothRectangleBorder(
               borderRadius: 18,
               smoothing: 0.9,

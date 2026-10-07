@@ -8,6 +8,7 @@ class SmoothContainer extends StatelessWidget {
   final double cornerRadius;
   final double cornerSmoothing;
   final Color? color;
+  final Gradient? gradient;
   final List<BoxShadow>? shadows;
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
@@ -19,6 +20,7 @@ class SmoothContainer extends StatelessWidget {
     this.cornerRadius = 24.0,
     this.cornerSmoothing = 1.0, // 1.0 is full smoothing (iOS style squircle)
     this.color,
+    this.gradient,
     this.shadows,
     this.padding,
     this.margin,
@@ -31,7 +33,8 @@ class SmoothContainer extends StatelessWidget {
       margin: margin,
       padding: padding,
       decoration: ShapeDecoration(
-        color: color,
+        gradient: gradient,
+        color: gradient == null ? color : null,
         shadows: shadows,
         shape: SmoothRectangleBorder(
           side: borderSide ?? BorderSide.none,

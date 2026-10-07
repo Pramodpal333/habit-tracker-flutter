@@ -67,7 +67,11 @@ class _HabitStatsCalendarState extends State<HabitStatsCalendar> {
         const SizedBox(height: 16),
 
         SmoothContainer(
-          color: AppColors.cardSurface,
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFFFAFBFF), Color(0xFFF5F3FF)],
+          ),
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [

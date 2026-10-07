@@ -3,7 +3,9 @@ import 'package:flutter_calendar_collection/business/habit_tracker/streak_counte
 import 'package:habit_checklist/core/utils.dart';
 
 import '../models/habit_model.dart';
+import '../theme/app_gradients.dart';
 import '../theme/app_typography.dart';
+import '../theme/habit_tile_colors.dart';
 import 'app_list_tile.dart';
 
 /// A beautifully styled card widget to display a single habit.
@@ -25,10 +27,19 @@ class HabitCard extends StatelessWidget {
     final streakCounter = StreakCounter(completedDates: habit.completedDates);
     final currentStreak = streakCounter.currentStreak;
     final isDone = habit.isDoneToday;
+    final priority = habit.priority;
+    final tileGradient = AppGradients.habitTileGradient(priority, habit.id);
+    final titleColor =
+        HabitTileColors.title(priority, isDoneToday: isDone);
+    final streakColor = isDone
+        ? HabitTileColors.streakEmphasis(priority)
+        : HabitTileColors.streakMuted(priority);
 
     return GestureDetector(
       onLongPress: onTap,
       child: AppListTile(
+        gradient: tileGradient,
+        shadowTint: priority.accentColor,
         onTap: onToggle,
         trailing: GestureDetector(
           onTap: onToggle,
@@ -40,9 +51,7 @@ class HabitCard extends StatelessWidget {
               children: [
                 Icon(
                   Icons.local_fire_department,
-                  color: isDone
-                      ? const Color(0xFFE53935)
-                      : Colors.grey.shade400,
+                  color: streakColor,
                   size: 28,
                 ),
                 const SizedBox(height: 2),
@@ -51,9 +60,7 @@ class HabitCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
-                    color: isDone
-                        ? const Color(0xFFE53935)
-                        : Colors.grey.shade500,
+                    color: streakColor,
                   ),
                 ),
               ],
@@ -62,7 +69,11 @@ class HabitCard extends StatelessWidget {
         ),
         leading: Text(
           habit.title.toTitleCase(),
-          style: isDone ? AppTypography.cardTitleDone : AppTypography.cardTitle,
+          style: AppTypography.cardTitle.copyWith(
+            color: titleColor,
+            decoration: isDone ? TextDecoration.lineThrough : null,
+            decorationColor: titleColor,
+          ),
         ),
       ),
     );

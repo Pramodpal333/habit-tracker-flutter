@@ -7,8 +7,9 @@ import '../blocs/habit/habit_event.dart';
 import '../data/repositories/app_settings_repository.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_typography.dart';
+import 'package:smooth_border/smooth_border.dart';
+
 import '../widgets/settings_tile.dart';
-import '../widgets/smooth_container.dart';
 
 /// **Settings** tab — profile placeholder and app-level actions.
 ///
@@ -84,36 +85,50 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(title: const Text('Settings')),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 120),
         children: [
-          SmoothContainer(
-            color: AppColors.cardSurface,
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              children: [
-                CircleAvatar(
-                  radius: 40,
-                  backgroundColor: AppColors.primary.withValues(alpha: 0.15),
-                  child: const Icon(
-                    Icons.face_rounded,
-                    size: 40,
-                    color: AppColors.primary,
+          DecoratedBox(
+            decoration: ShapeDecoration(
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFFE4E7FF),
+                  Color(0xFFF0ECFF),
+                  Color(0xFFE8F4FA),
+                ],
+              ),
+              shape: SmoothRectangleBorder(borderRadius: 24, smoothing: 1),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    radius: 40,
+                    backgroundColor: AppColors.primary.withValues(alpha: 0.2),
+                    child: const Icon(
+                      Icons.face_rounded,
+                      size: 40,
+                      color: AppColors.primary,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  'Habit Tracker',
-                  style: AppTypography.screenTitle.copyWith(fontSize: 20),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Local profile — sign-in can replace this section later.',
-                  textAlign: TextAlign.center,
-                  style: AppTypography.emptyStateText.copyWith(fontSize: 13),
-                ),
-              ],
+                  const SizedBox(height: 12),
+                  Text(
+                    'Habit Tracker',
+                    style: AppTypography.screenTitle.copyWith(fontSize: 20),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Local profile — sign-in can replace this section later.',
+                    textAlign: TextAlign.center,
+                    style: AppTypography.emptyStateText.copyWith(fontSize: 13),
+                  ),
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 24),
