@@ -13,6 +13,7 @@ import 'package:smooth_border/smooth_border.dart';
 
 import '../widgets/app_alert_sheet.dart';
 import '../widgets/settings_tile.dart';
+import 'celebration_result_screen.dart';
 
 /// **Settings** tab — profile placeholder and app-level actions.
 ///
@@ -65,15 +66,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           await context.read<BackupCoordinator>().exportBackupToDevice();
       if (!mounted) return;
       if (saved) {
-        await showAppInfoSheet(
-          context,
-          title: 'Backup saved',
-          message:
-              'Use the share sheet to save the backup (Files, Drive, etc.). '
-              'Keep that .json file somewhere safe.',
-          tone: AppAlertTone.success,
-          icon: Icons.cloud_done_rounded,
-        );
+        await CelebrationResultScreen.showBackupSaved(context);
       }
     } on BackupException catch (e) {
       if (!mounted) return;
@@ -141,13 +134,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         _notificationsEnabled =
             context.read<AppSettingsRepository>().notificationsEnabled;
       });
-      await showAppInfoSheet(
+      await CelebrationResultScreen.showImportComplete(
         context,
-        title: 'Import complete',
-        message:
-            '${backup.habits.length} habit(s) restored with all completion history.',
-        tone: AppAlertTone.success,
-        actionLabel: 'Done',
+        habitCount: backup.habits.length,
       );
     } on BackupException catch (e) {
       if (mounted) {

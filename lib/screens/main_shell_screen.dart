@@ -18,12 +18,23 @@ import 'settings_screen.dart';
 class MainShellScreen extends StatefulWidget {
   const MainShellScreen({super.key});
 
+  static void selectTab(BuildContext context, int index) {
+    context
+        .findAncestorStateOfType<_MainShellScreenState>()
+        ?.goToTab(index);
+  }
+
   @override
   State<MainShellScreen> createState() => _MainShellScreenState();
 }
 
 class _MainShellScreenState extends State<MainShellScreen> {
   int _selectedIndex = 0;
+
+  void goToTab(int index) {
+    if (index == _selectedIndex) return;
+    setState(() => _selectedIndex = index);
+  }
 
   static const _tabs = <Widget>[
     HomeScreen(),
