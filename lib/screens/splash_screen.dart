@@ -12,7 +12,7 @@ import 'main_shell_screen.dart';
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
-  static const Duration displayDuration = Duration(seconds: 10005);
+  static const Duration displayDuration = Duration(seconds: 5);
   static const String logoAsset = 'assets/app-brandings/app-logo.png';
   static const String tagline = 'Small steps.\nLasting change.';
 
