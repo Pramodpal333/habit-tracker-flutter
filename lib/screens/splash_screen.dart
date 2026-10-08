@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_typography.dart';
 import '../widgets/app_gradient_scaffold.dart';
+import '../widgets/app_version_label.dart';
 import '../widgets/celebration_backdrop.dart';
 import 'main_shell_screen.dart';
 
@@ -111,15 +112,25 @@ class _SplashScreenState extends State<SplashScreen>
               children: [
                 FadeTransition(
                   opacity: _taglineOpacity,
-                  child: Text(
-                    'Made by Pramod Pal',
-                    textAlign: TextAlign.center,
-                    style: AppTypography.emptyStateText.copyWith(
-                      fontSize: 10,
-                      height: 1,
-                      letterSpacing: 1,
-                      color: AppColors.textLight,
-                    ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Made by Pramod Pal',
+                        textAlign: TextAlign.center,
+                        style: AppTypography.emptyStateText.copyWith(
+                          fontSize: 10,
+                          height: 1,
+                          letterSpacing: 1,
+                          color: AppColors.textLight,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      AppVersionLabel(
+                        fontSize: 9,
+                        color: AppColors.textLight.withValues(alpha: 0.65),
+                      ),
+                    ],
                   ),
                 ),
                 SizedBox(height: MediaQuery.of(context).padding.bottom + 16),

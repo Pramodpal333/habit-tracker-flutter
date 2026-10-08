@@ -12,6 +12,7 @@ import '../theme/app_typography.dart';
 import 'package:smooth_border/smooth_border.dart';
 
 import '../widgets/app_alert_sheet.dart';
+import '../widgets/app_version_label.dart';
 import '../widgets/settings_tile.dart';
 import 'celebration_result_screen.dart';
 
@@ -394,6 +395,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
           ),
+          const SizedBox(height: 32),
+          const Center(child: AppVersionLabel(fontSize: 11)),
+          const SizedBox(height: 8),
         ],
       ),
     );

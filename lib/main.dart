@@ -4,6 +4,7 @@ import 'package:flutter_calendar_collection/l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import 'core/app_version.dart';
 import 'blocs/habit/habit_bloc.dart';
 import 'blocs/habit/habit_event.dart';
 import 'data/backup/backup_coordinator.dart';
@@ -25,6 +26,7 @@ Future<void> main() async {
 
   final settingsDataSource = AppSettingsLocalDataSource();
   await settingsDataSource.init();
+  await AppVersion.init();
 
   // Inject local repos today; replace with Remote/Sync repos when you add a backend.
   final HabitRepository habitRepository =
