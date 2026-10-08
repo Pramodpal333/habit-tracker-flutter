@@ -12,7 +12,7 @@ import 'data/local/habit_local_data_source.dart';
 import 'data/repositories/app_settings_repository.dart';
 import 'data/repositories/habit_repository.dart';
 import 'data/repositories/local_habit_repository.dart';
-import 'screens/main_shell_screen.dart';
+import 'screens/splash_screen.dart';
 import 'theme/app_theme.dart';
 
 Future<void> main() async {
@@ -86,7 +86,7 @@ class HabitChecklistApp extends StatelessWidget {
           supportedLocales: const [
             Locale('en', ''),
           ],
-          home: const MainShellScreen(),
+          home: const SplashScreen(),
         ),
       ),
     );
