@@ -3,19 +3,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/habit/habit_bloc.dart';
 import '../blocs/habit/habit_event.dart';
+import '../models/habit_priority.dart';
 import '../theme/app_typography.dart';
 import '../widgets/app_text_field.dart';
+import '../widgets/habit_priority_selector.dart';
 import '../widgets/primary_button.dart';
 
-/// Bottom sheet for renaming a habit from the Habits tab.
+/// Bottom sheet for editing a habit from the Habits tab.
 class EditHabitScreen extends StatefulWidget {
   final String habitId;
   final String initialTitle;
+  final HabitPriority initialPriority;
 
   const EditHabitScreen({
     super.key,
     required this.habitId,
     required this.initialTitle,
+    required this.initialPriority,
   });
 
   @override
@@ -24,11 +28,13 @@ class EditHabitScreen extends StatefulWidget {
 
 class _EditHabitScreenState extends State<EditHabitScreen> {
   late final TextEditingController _titleController;
+  late HabitPriority _priority;
 
   @override
   void initState() {
     super.initState();
     _titleController = TextEditingController(text: widget.initialTitle);
+    _priority = widget.initialPriority;
   }
 
   @override
@@ -42,7 +48,11 @@ class _EditHabitScreenState extends State<EditHabitScreen> {
     if (title.isEmpty) return;
 
     context.read<HabitBloc>().add(
-          UpdateHabit(id: widget.habitId, title: title),
+          UpdateHabit(
+            id: widget.habitId,
+            title: title,
+            priority: _priority,
+          ),
         );
     Navigator.of(context).pop();
   }
@@ -73,6 +83,11 @@ class _EditHabitScreenState extends State<EditHabitScreen> {
             hintText: 'Habit name',
             autofocus: true,
             onSubmitted: (_) => _submit(),
+          ),
+          const SizedBox(height: 20),
+          HabitPrioritySelector(
+            value: _priority,
+            onChanged: (priority) => setState(() => _priority = priority),
           ),
           const SizedBox(height: 24),
           PrimaryButton(text: 'Save Changes', onPressed: _submit),

@@ -48,7 +48,7 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
     Habit? updatedHabit;
     final updatedHabits = state.habits.map((habit) {
       if (habit.id == event.id) {
-        updatedHabit = habit.copyWith(title: title);
+        updatedHabit = habit.copyWith(title: title, priority: event.priority);
         return updatedHabit!;
       }
       return habit;
