@@ -7,6 +7,7 @@ import '../theme/app_colors.dart';
 import '../theme/app_gradients.dart';
 import '../theme/app_typography.dart';
 import '../widgets/app_gradient_scaffold.dart';
+import '../widgets/habit_week_progress.dart';
 import '../widgets/primary_button.dart';
 import '../widgets/smooth_container.dart';
 import 'habit_details_screen.dart';
@@ -15,17 +16,23 @@ import 'habit_details_screen.dart';
 class HabitCompletedScreen extends StatefulWidget {
   final String habitId;
   final int streakCount;
+  final List<DateTime> completedDates;
+  final DateTime completedOn;
 
   const HabitCompletedScreen({
     super.key,
     required this.habitId,
     required this.streakCount,
+    required this.completedDates,
+    required this.completedOn,
   });
 
   static Future<void> show(
     BuildContext context, {
     required String habitId,
     required int streakCount,
+    required List<DateTime> completedDates,
+    required DateTime completedOn,
   }) {
     return Navigator.of(context).push<void>(
       PageRouteBuilder<void>(
@@ -38,6 +45,8 @@ class HabitCompletedScreen extends StatefulWidget {
           return HabitCompletedScreen(
             habitId: habitId,
             streakCount: streakCount,
+            completedDates: completedDates,
+            completedOn: completedOn,
           );
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -99,7 +108,7 @@ class _HabitCompletedScreenState extends State<HabitCompletedScreen>
 
     return AppGradientScaffold(
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black87,
         body: Stack(
           fit: StackFit.expand,
           children: [
@@ -153,7 +162,7 @@ class _HabitCompletedScreenState extends State<HabitCompletedScreen>
                       child: ShaderMask(
                         shaderCallback: (bounds) {
                           return const LinearGradient(
-                            colors: [Color(0xFF2A2D43), Color(0xFF4A5080)],
+                            colors: [Color(0xFFFFFFFF), Color(0xFF00FFFF)],
                           ).createShader(bounds);
                         },
                         child: Text(
@@ -161,7 +170,7 @@ class _HabitCompletedScreenState extends State<HabitCompletedScreen>
                           textAlign: TextAlign.center,
                           style: AppTypography.emptyStateText.copyWith(
                             fontSize: 12,
-                            color: Colors.white,
+                            color: AppColors.textLight,
                             letterSpacing: -0.3,
                           ),
                         ),
@@ -212,12 +221,46 @@ class _HabitCompletedScreenState extends State<HabitCompletedScreen>
                         ),
                       ),
                     ),
+                    const SizedBox(height: 28),
+                    _EntranceSlide(
+                      delay: const Duration(milliseconds: 340),
+                      child: SmoothContainer(
+                        cornerRadius: 24,
+                        // color: AppColors.cardSurface.withValues(alpha: 0.55),
+                        borderSide: BorderSide(
+                          color: AppColors.borderInactive.withValues(
+                            alpha: 0.6,
+                          ),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 16,
+                        ),
+                        child: Column(
+                          children: [
+                            // Text(
+                            //   'This week progress',
+                            //   style: AppTypography.emptyStateText.copyWith(
+                            //     fontSize: 13,
+                            //     fontWeight: FontWeight.w600,
+                            //     color: AppColors.textSecondary,
+                            //   ),
+                            // ),
+                            const SizedBox(height: 14),
+                            HabitWeekProgress(
+                              completedDates: widget.completedDates,
+                              anchorDate: widget.completedOn,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                     const Spacer(flex: 3),
                     _EntranceSlide(
-                      delay: const Duration(milliseconds: 360),
+                      delay: const Duration(milliseconds: 400),
                       child: SmoothContainer(
                         cornerRadius: 32,
-                        color: AppColors.cardSurface.withValues(alpha: 0.82),
+                        // color: AppColors.cardSurface.withValues(alpha: 0.82),
                         shadows: [
                           BoxShadow(
                             color: AppColors.primary.withValues(alpha: 0.12),
@@ -485,7 +528,7 @@ class _SecondarySheetButton extends StatelessWidget {
       width: double.infinity,
       child: DecoratedBox(
         decoration: ShapeDecoration(
-          color: AppColors.cardSurface.withValues(alpha: 0.65),
+          color: AppColors.cardSurface,
           shape: SmoothRectangleBorder(
             borderRadius: 24,
             smoothing: 1,

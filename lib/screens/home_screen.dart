@@ -92,11 +92,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             context,
                             habit: habit,
                             date: _selectedDate,
-                            onMarkedComplete: (streak) {
+                            onMarkedComplete: (streak, completedDates, day) {
                               HabitCompletedScreen.show(
                                 context,
                                 habitId: habit.id,
                                 streakCount: streak,
+                                completedDates: completedDates,
+                                completedOn: day,
                               );
                             },
                           );
