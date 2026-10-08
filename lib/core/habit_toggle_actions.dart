@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_calendar_collection/business/habit_tracker/streak_counter.dart';
 
+import 'app_haptics.dart';
 import '../blocs/habit/habit_bloc.dart';
 import '../blocs/habit/habit_event.dart';
 import 'utils.dart';
@@ -20,6 +21,7 @@ Future<void> toggleHabitCompletionForDate(
   final wasDone = habit.isCompletedOn(day);
 
   if (!wasDone) {
+    AppHaptics.heavy();
     context.read<HabitBloc>().add(ToggleHabitStatusByDate(habit.id, day));
     final updatedDates = [...habit.completedDates, day];
     onMarkedComplete?.call(

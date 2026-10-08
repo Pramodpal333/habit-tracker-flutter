@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_border/smooth_border.dart';
 
+import '../core/app_haptics.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_gradients.dart';
 import '../widgets/app_bottom_nav_bar.dart';
@@ -81,7 +82,7 @@ class _MainShellScreenState extends State<MainShellScreen> {
                 ],
               ),
               child: FloatingActionButton(
-                onPressed: _openAddHabitSheet,
+                onPressed: AppHaptics.wrapButton(_openAddHabitSheet),
                 elevation: 0,
                 highlightElevation: 0,
                 backgroundColor: Colors.transparent,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_border/smooth_border.dart';
 
+import '../core/app_haptics.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_gradients.dart';
 import '../theme/app_typography.dart';
@@ -106,7 +107,7 @@ class _NavBarButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: AppHaptics.wrapButton(onTap)!,
       borderRadius: BorderRadius.circular(20),
       splashColor: AppColors.primary.withValues(alpha: 0.12),
       highlightColor: AppColors.primary.withValues(alpha: 0.06),

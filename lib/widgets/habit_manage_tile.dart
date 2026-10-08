@@ -4,6 +4,7 @@ import 'package:smooth_border/smooth_border.dart';
 import 'package:habit_checklist/core/utils.dart';
 
 import '../models/habit_model.dart';
+import '../core/app_haptics.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_gradients.dart';
 import '../theme/app_typography.dart';
@@ -54,11 +55,13 @@ class HabitManageTile extends StatelessWidget {
         shape: SmoothRectangleBorder(borderRadius: 14, smoothing: 0.8),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: () => showHabitManageMenu(
-            context,
-            habitTitle: habit.title,
-          ).then((action) {
-            if (action != null) onActionSelected(action);
+          onTap: AppHaptics.wrapButton(() {
+            showHabitManageMenu(
+              context,
+              habitTitle: habit.title,
+            ).then((action) {
+              if (action != null) onActionSelected(action);
+            });
           }),
           splashColor: AppColors.textPrimary.withValues(alpha: 0.08),
           child: const Padding(

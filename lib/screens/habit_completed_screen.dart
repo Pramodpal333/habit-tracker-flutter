@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:smooth_border/smooth_border.dart';
 
+import '../core/app_haptics.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_gradients.dart';
 import '../theme/app_typography.dart';
@@ -486,7 +487,7 @@ class _SecondarySheetButton extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: onPressed,
+            onTap: AppHaptics.wrapButton(onPressed),
             customBorder: SmoothRectangleBorder(borderRadius: 24, smoothing: 1),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),

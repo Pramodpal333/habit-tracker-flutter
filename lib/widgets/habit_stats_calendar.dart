@@ -5,6 +5,7 @@ import 'package:flutter_calendar_collection/core/utils/date_utils.dart';
 import 'package:flutter_calendar_collection/l10n/app_localizations.dart';
 import 'package:smooth_border/smooth_border.dart';
 
+import '../core/app_haptics.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_typography.dart';
 import 'smooth_container.dart';
@@ -92,7 +93,7 @@ class _HabitStatsCalendarState extends State<HabitStatsCalendar> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         IconButton(
-          onPressed: () => _changeMonth(-1),
+          onPressed: AppHaptics.wrapButton(() => _changeMonth(-1)),
           icon: const Icon(Icons.chevron_left, color: AppColors.textPrimary),
         ),
         Text(
@@ -100,7 +101,9 @@ class _HabitStatsCalendarState extends State<HabitStatsCalendar> {
           style: AppTypography.screenTitle.copyWith(fontSize: 18),
         ),
         IconButton(
-          onPressed: _canGoToNextMonth ? () => _changeMonth(1) : null,
+          onPressed: _canGoToNextMonth
+              ? AppHaptics.wrapButton(() => _changeMonth(1))
+              : null,
           icon: Icon(
             Icons.chevron_right,
             color: _canGoToNextMonth
