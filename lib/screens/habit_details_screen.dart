@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/habit/habit_bloc.dart';
-import '../blocs/habit/habit_event.dart';
 import '../blocs/habit/habit_state.dart';
+import '../core/habit_toggle_actions.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_typography.dart';
 import '../widgets/app_gradient_scaffold.dart';
@@ -49,8 +49,10 @@ class HabitDetailsScreen extends StatelessWidget {
             child: HabitStatsCalendar(
               completedDates: habit.completedDates,
               onDateToggled: (date) {
-                context.read<HabitBloc>().add(
-                  ToggleHabitStatusByDate(habitId, date),
+                toggleHabitCompletionForDate(
+                  context,
+                  habit: habit,
+                  date: date,
                 );
               },
             ),

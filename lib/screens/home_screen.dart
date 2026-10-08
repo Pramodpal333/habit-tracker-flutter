@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../blocs/habit/habit_bloc.dart';
-import '../blocs/habit/habit_event.dart';
+import '../core/habit_toggle_actions.dart';
 import '../blocs/habit/habit_state.dart';
 import '../core/storage_permissions.dart';
 import '../models/habit_model.dart';
 import '../widgets/dashboard_day_picker.dart';
 import '../widgets/habit_card.dart';
 import '../widgets/habits_empty_state.dart';
+import 'habit_completed_screen.dart';
 import 'habit_details_screen.dart';
 
 /// **Home** tab — daily checklist with streak toggle (see [HabitCard]).
@@ -88,12 +88,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         habit: habit,
                         viewDate: _selectedDate,
                         onToggle: () {
-                          context.read<HabitBloc>().add(
-                                ToggleHabitStatusByDate(
-                                  habit.id,
-                                  _selectedDate,
-                                ),
+                          toggleHabitCompletionForDate(
+                            context,
+                            habit: habit,
+                            date: _selectedDate,
+                            onMarkedComplete: (streak) {
+                              HabitCompletedScreen.show(
+                                context,
+                                habitId: habit.id,
+                                streakCount: streak,
                               );
+                            },
+                          );
                         },
                         onTap: () {
                           Navigator.push(
