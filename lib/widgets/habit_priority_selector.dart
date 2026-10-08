@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smooth_border/smooth_border.dart';
 
 import '../models/habit_priority.dart';
+import '../core/app_haptics.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_typography.dart';
 
@@ -68,7 +69,7 @@ class _PriorityRadioChip extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: onTap,
+        onTap: AppHaptics.wrapButton(onTap)!,
         borderRadius: BorderRadius.circular(18),
         splashColor: accent.withValues(alpha: 0.15),
         child: AnimatedContainer(

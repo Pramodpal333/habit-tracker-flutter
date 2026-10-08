@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habit_checklist/core/utils.dart';
 import 'package:smooth_border/smooth_border.dart';
 
+import '../core/app_haptics.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_typography.dart';
 import 'habit_manage_action.dart';
@@ -148,7 +149,7 @@ class _MenuRow extends StatelessWidget {
         shape: SmoothRectangleBorder(borderRadius: 18, smoothing: 0.85),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: onTap,
+          onTap: AppHaptics.wrapButton(onTap)!,
           splashColor: AppColors.primary.withValues(alpha: 0.08),
           highlightColor: AppColors.primary.withValues(alpha: 0.04),
           child: Padding(

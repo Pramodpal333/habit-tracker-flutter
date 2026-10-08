@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smooth_border/smooth_border.dart';
 
+import '../core/app_haptics.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_typography.dart';
 
@@ -130,7 +131,7 @@ class _DashboardDayPickerState extends State<DashboardDayPicker> {
                 Material(
                   color: Colors.transparent,
                   child: InkWell(
-                    onTap: _goToToday,
+                    onTap: AppHaptics.wrapButton(_goToToday)!,
                     borderRadius: BorderRadius.circular(20),
                     child: Ink(
                       decoration: ShapeDecoration(

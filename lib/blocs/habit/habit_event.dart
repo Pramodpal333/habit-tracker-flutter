@@ -15,15 +15,20 @@ class LoadHabits extends HabitEvent {
   const LoadHabits();
 }
 
-/// Renames an existing habit (Habits tab → Edit).
+/// Updates title and priority (Habits tab → Edit).
 class UpdateHabit extends HabitEvent {
   final String id;
   final String title;
+  final HabitPriority priority;
 
-  const UpdateHabit({required this.id, required this.title});
+  const UpdateHabit({
+    required this.id,
+    required this.title,
+    required this.priority,
+  });
 
   @override
-  List<Object?> get props => [id, title];
+  List<Object?> get props => [id, title, priority];
 }
 
 /// Removes one habit from storage and state.

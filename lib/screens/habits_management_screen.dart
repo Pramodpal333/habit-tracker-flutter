@@ -5,6 +5,7 @@ import 'package:smooth_border/smooth_border.dart';
 import '../blocs/habit/habit_bloc.dart';
 import '../blocs/habit/habit_event.dart';
 import '../blocs/habit/habit_state.dart';
+import '../models/habit_priority.dart';
 import '../theme/app_colors.dart';
 import '../widgets/app_alert_sheet.dart';
 import '../widgets/habit_manage_tile.dart';
@@ -36,13 +37,22 @@ class HabitsManagementScreen extends StatelessWidget {
     }
   }
 
-  void _openEditSheet(BuildContext context, String id, String title) {
+  void _openEditSheet(
+    BuildContext context,
+    String id,
+    String title,
+    HabitPriority priority,
+  ) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: AppColors.cardSurface,
       shape: SmoothRectangleBorder(borderRadius: 32, smoothing: 1),
-      builder: (context) => EditHabitScreen(habitId: id, initialTitle: title),
+      builder: (context) => EditHabitScreen(
+        habitId: id,
+        initialTitle: title,
+        initialPriority: priority,
+      ),
     );
   }
 
@@ -82,7 +92,12 @@ class HabitsManagementScreen extends StatelessWidget {
                         ),
                       );
                     case HabitManageAction.editHabit:
-                      _openEditSheet(context, habit.id, habit.title);
+                      _openEditSheet(
+                        context,
+                        habit.id,
+                        habit.title,
+                        habit.priority,
+                      );
                     case HabitManageAction.deleteHabit:
                       _confirmDelete(context, habit.id);
                   }

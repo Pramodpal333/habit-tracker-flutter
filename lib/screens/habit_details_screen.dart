@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/habit/habit_bloc.dart';
-import '../blocs/habit/habit_event.dart';
 import '../blocs/habit/habit_state.dart';
+import '../core/habit_toggle_actions.dart';
+import '../core/app_haptics.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_typography.dart';
 import '../widgets/app_gradient_scaffold.dart';
@@ -34,7 +35,7 @@ class HabitDetailsScreen extends StatelessWidget {
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: AppColors.textPrimary),
-          onPressed: () => Navigator.pop(context),
+          onPressed: AppHaptics.wrapButton(() => Navigator.pop(context)),
         ),
       ),
       body: BlocBuilder<HabitBloc, HabitState>(
@@ -49,8 +50,10 @@ class HabitDetailsScreen extends StatelessWidget {
             child: HabitStatsCalendar(
               completedDates: habit.completedDates,
               onDateToggled: (date) {
-                context.read<HabitBloc>().add(
-                  ToggleHabitStatusByDate(habitId, date),
+                toggleHabitCompletionForDate(
+                  context,
+                  habit: habit,
+                  date: date,
                 );
               },
             ),

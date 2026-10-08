@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_border/smooth_border.dart';
 
+import '../core/app_haptics.dart';
 import '../theme/app_colors.dart';
 
 /// Settings row inside a colored [SmoothContainer]-style card.
@@ -32,7 +33,7 @@ class SettingsTile extends StatelessWidget {
         child: onTap == null
             ? Padding(padding: padding, child: child)
             : InkWell(
-                onTap: onTap,
+                onTap: AppHaptics.wrapButton(onTap),
                 customBorder:
                     SmoothRectangleBorder(borderRadius: 24, smoothing: 1),
                 splashColor: AppColors.primary.withValues(alpha: 0.08),

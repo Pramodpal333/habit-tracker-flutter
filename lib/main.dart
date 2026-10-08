@@ -4,6 +4,7 @@ import 'package:flutter_calendar_collection/l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import 'core/app_version.dart';
 import 'blocs/habit/habit_bloc.dart';
 import 'blocs/habit/habit_event.dart';
 import 'data/backup/backup_coordinator.dart';
@@ -12,7 +13,7 @@ import 'data/local/habit_local_data_source.dart';
 import 'data/repositories/app_settings_repository.dart';
 import 'data/repositories/habit_repository.dart';
 import 'data/repositories/local_habit_repository.dart';
-import 'screens/main_shell_screen.dart';
+import 'screens/splash_screen.dart';
 import 'theme/app_theme.dart';
 
 Future<void> main() async {
@@ -25,6 +26,7 @@ Future<void> main() async {
 
   final settingsDataSource = AppSettingsLocalDataSource();
   await settingsDataSource.init();
+  await AppVersion.init();
 
   // Inject local repos today; replace with Remote/Sync repos when you add a backend.
   final HabitRepository habitRepository =
@@ -86,7 +88,7 @@ class HabitChecklistApp extends StatelessWidget {
           supportedLocales: const [
             Locale('en', ''),
           ],
-          home: const MainShellScreen(),
+          home: const SplashScreen(),
         ),
       ),
     );
