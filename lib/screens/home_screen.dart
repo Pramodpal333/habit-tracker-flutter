@@ -7,6 +7,7 @@ import '../core/storage_permissions.dart';
 import '../models/habit_model.dart';
 import '../widgets/dashboard_day_picker.dart';
 import '../widgets/habit_card.dart';
+import '../widgets/habit_completion_filter_bar.dart';
 import '../widgets/habits_empty_state.dart';
 import 'habit_completed_screen.dart';
 import 'habit_details_screen.dart';
@@ -25,6 +26,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late DateTime _selectedDate;
 
+  /// Home list filter — defaults to [HabitCompletionFilter.all] so every habit
+  /// for the selected day is shown until the user picks Completed or Incomplete.
+  HabitCompletionFilter _completionFilter = HabitCompletionFilter.all;
+
   @override
   void initState() {
     super.initState();
@@ -38,10 +43,38 @@ class _HomeScreenState extends State<HomeScreen> {
   static DateTime _dateOnly(DateTime date) =>
       DateTime(date.year, date.month, date.day);
 
+  /// Habits that already existed on [_selectedDate] (ignores habits created later).
   List<Habit> _habitsForSelectedDay(List<Habit> habits) {
     return habits
         .where((habit) => !_dateOnly(habit.createdAt).isAfter(_selectedDate))
         .toList();
+  }
+
+  /// Applies [_completionFilter] using each habit's completion state on [_selectedDate].
+  List<Habit> _applyCompletionFilter(List<Habit> habitsForDay) {
+    switch (_completionFilter) {
+      case HabitCompletionFilter.all:
+        return habitsForDay;
+      case HabitCompletionFilter.completed:
+        return habitsForDay
+            .where((habit) => habit.isCompletedOn(_selectedDate))
+            .toList();
+      case HabitCompletionFilter.incomplete:
+        return habitsForDay
+            .where((habit) => !habit.isCompletedOn(_selectedDate))
+            .toList();
+    }
+  }
+
+  String? _emptyMessageForFilter() {
+    switch (_completionFilter) {
+      case HabitCompletionFilter.all:
+        return null;
+      case HabitCompletionFilter.completed:
+        return 'No completed habits on this day.\nTry another filter or date.';
+      case HabitCompletionFilter.incomplete:
+        return 'No incomplete habits on this day.\nTry another filter or date.';
+    }
   }
 
   @override
@@ -57,6 +90,12 @@ class _HomeScreenState extends State<HomeScreen> {
               selectedDate: _selectedDate,
               onDateChanged: (date) {
                 setState(() => _selectedDate = _dateOnly(date));
+              },
+            ),
+            HabitCompletionFilterBar(
+              value: _completionFilter,
+              onChanged: (filter) {
+                setState(() => _completionFilter = filter);
               },
             ),
             Expanded(
@@ -79,11 +118,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   }
 
+                  final visibleHabits = _applyCompletionFilter(habitsForDay);
+
+                  if (visibleHabits.isEmpty) {
+                    return HabitsEmptyState(
+                      message: _emptyMessageForFilter()!,
+                    );
+                  }
+
                   return ListView.builder(
-                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
-                    itemCount: habitsForDay.length,
+                    padding: const EdgeInsets.fromLTRB(20, 12, 20, 100),
+                    itemCount: visibleHabits.length,
                     itemBuilder: (context, index) {
-                      final habit = habitsForDay[index];
+                      final habit = visibleHabits[index];
                       return HabitCard(
                         habit: habit,
                         viewDate: _selectedDate,
